@@ -718,19 +718,19 @@
     ]
   },
   "packageFolders": {
-    "/home/codespace/.nuget/packages/": {}
+    "C:\\Users\\Tony Passavanti\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/workspaces/AITravelAssistant/backend/backend.csproj",
+      "projectUniqueName": "C:\\Users\\Tony Passavanti\\Projects\\AITravelAssistant\\backend\\backend.csproj",
       "projectName": "backend",
-      "projectPath": "/workspaces/AITravelAssistant/backend/backend.csproj",
-      "packagesPath": "/home/codespace/.nuget/packages/",
-      "outputPath": "/workspaces/AITravelAssistant/backend/obj/",
+      "projectPath": "C:\\Users\\Tony Passavanti\\Projects\\AITravelAssistant\\backend\\backend.csproj",
+      "packagesPath": "C:\\Users\\Tony Passavanti\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Tony Passavanti\\Projects\\AITravelAssistant\\backend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/codespace/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\Tony Passavanti\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -791,7 +791,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.407/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.410/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
