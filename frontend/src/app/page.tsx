@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Home() {
   const [preferences, setPreferences] = useState({
@@ -12,30 +12,54 @@ export default function Home() {
     accommodation: 'hotel',
   });
 
-  const [itinerary, setItinerary] = useState('');
+  const [itinerary, setItinerary] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsLoading(true);
+  
+  try {
+    console.log('Trying to connect to backend...');
+    const response = await fetch('http://localhost:5000/api/itinerary/create', {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // @ts-ignore - Ignore TypeScript error for process
+      body: JSON.stringify(preferences),
+    });
     
-    try {
-      const response = await fetch('http://localhost:5000/api/itinerary', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(preferences),
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Backend error:', {
+        status: response.status,
+        statusText: response.statusText,    
+        body: errorText
       });
-      
-      const data = await response.json();
-      setItinerary(data.itinerary);
-    } catch (error) {
-      console.error('Error generating itinerary:', error);
-    } finally {
-      setIsLoading(false);
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  };
+    
+    const data = await response.json();
+    console.log('Received response:', data);
+    setItinerary(data.itinerary);
+  } catch (error) {
+    console.error('Fetch error:', error);
+    alert(`Failed to connect to the server. Please ensure the backend is running. Error: ${error.message}`);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+  if (!isClient) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -144,7 +168,10 @@ export default function Home() {
         {itinerary && (
           <div className="mt-8 bg-white p-6 rounded-lg shadow">
             <h2 className="text-xl font-semibold mb-4">Your Travel Itinerary</h2>
-            <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: itinerary }} />
+            <div 
+              className="prose max-w-none" 
+              dangerouslySetInnerHTML={{ __html: itinerary }} 
+            />
           </div>
         )}
       </div>
