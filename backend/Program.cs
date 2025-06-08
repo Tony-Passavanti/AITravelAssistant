@@ -15,7 +15,8 @@ builder.Services.AddCors(options =>
     {
         builder.WithOrigins("http://localhost:3000")
                .AllowAnyMethod()
-               .AllowAnyHeader();
+               .AllowAnyHeader()
+               .AllowCredentials();
     });
 });
 
@@ -36,7 +37,7 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "AI Travel Assistant API", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Brittany - Your Personal Travel Buddy API", Version = "v1" });
 });
 
 // Add HTTP Client Factory
@@ -52,25 +53,22 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "AI Travel Assistant API V1");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Brittany - Your Personal Travel Buddy API V1");
     });
 }
 
+// Apply CORS policy before other middleware
 app.UseCors("AllowFrontend");
 
+// Handle preflight requests
 app.Use(async (context, next) =>
 {
-    context.Response.OnStarting(() =>
-    {
-        context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
-        return Task.CompletedTask;
-    });
-    
     if (context.Request.Method == "OPTIONS")
     {
-        context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
-        context.Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        context.Response.Headers.Append("Access-Control-Allow-Origin", "http://localhost:3000");
+        context.Response.Headers.Append("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        context.Response.Headers.Append("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        context.Response.Headers.Append("Access-Control-Allow-Credentials", "true");
         context.Response.StatusCode = 204;
         return;
     }
